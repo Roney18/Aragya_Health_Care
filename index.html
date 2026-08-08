@@ -700,7 +700,7 @@
           <!-- Disables the interstitial captcha page for a smoother UX -->
           <input type="hidden" name="_captcha" value="false">
           <!-- REPLACE with the URL you want visitors redirected to after a successful submission -->
-          <input type="hidden" name="_next" value="/thank-you.html">
+          <input type="hidden" name="_next" value="thank-you.html">
           <!-- Sets the subject line of the email FormSubmit sends you -->
           <input type="hidden" name="_subject" value="New Enquiry — Arogya Griha Home Health Care">
           <!-- Formats the received email as a readable table instead of raw JSON -->
@@ -868,7 +868,13 @@
       });
     }, {threshold: 0.4});
     counters.forEach(el => counterObserver.observe(el));
-
+    // Ensure FormSubmit's redirect (_next) is always an absolute URL pointing
+  // to thank-you.html next to this page — required because formsubmit.co
+  // resolves relative "_next" paths against its own domain, not yours.
+  const nextField = document.querySelector('input[name="_next"]');
+  if (nextField) {
+    nextField.value = new URL('thank-you.html', window.location.href).href;
+  }
     // Basic client-side validation feedback for the enquiry form
     const form = document.getElementById('enquiry-form');
     const formNote = document.getElementById('form-note');
